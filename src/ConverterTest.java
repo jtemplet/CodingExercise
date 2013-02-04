@@ -105,13 +105,14 @@ public class ConverterTest extends Converter{
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff9(){
         Converter converter = new Converter();
-        converter.convert(" 77777777.00");
+        converter.convert("10.00.0");
     }
+
 /*
     @Test
     public void testAll() throws InterruptedException{
         Converter converter = new Converter();
-        for (int i = 1000009; i < 1100000; i++) {
+        for (int i = 100000009; i < 110000000; i++) {
             System.out.println(converter.convert("" + i));
             Thread.sleep(1000);
         }

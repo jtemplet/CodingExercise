@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.util.HashMap;
 
 /**
@@ -12,6 +11,8 @@ public class Converter {
     final static protected HashMap<Integer, String> numbersAsWordsOnes = new HashMap<Integer, String>();
     final static protected HashMap<Integer, String> numbersAsWordsTeens = new HashMap<Integer, String>();
     final static protected HashMap<Integer, String> numbersAsWordsTens = new HashMap<Integer, String>();
+
+    static String[] numberNames = { "", "thousand", "million", "billion", "trillion"};
 
     public Converter() {
         init();
@@ -92,50 +93,34 @@ public class Converter {
         return conditionalConcat(wholeWord, word);
     }
 
-    protected String convertThousands(final String num) {
-        Integer i = Integer.parseInt(num.substring(0, 1));
-        String wholeWord = "";
-        if (i > 0) {
-            wholeWord = numbersAsWordsOnes.get(i) + " thousand";
-        }
-        String hundos = num.substring(1);
-        String word = convertHundreds(hundos);
-        return conditionalConcat(wholeWord, word);
-    }
 
-    protected String convertTenThousands(final String num) {
-        Integer i = Integer.parseInt(num.substring(0, 2));
+    /***************************************
+     *
+     *    9123456654 <-- this as input
+     *
+     *    Breaks it up by 3's, from right to left
+     *    9 123 456 654
+     *
+     *
+     * @param numberAsString
+     * @return
+     ***************************************/
+    protected String convertBigNumber(String numberAsString) {
         String wholeWord = "";
-        if (i > 0) {
-            wholeWord = convertTens("" + i) + " thousand";
-        }
-        String hundos = num.substring(2);
-        String word = convertHundreds(hundos);
-        return conditionalConcat(wholeWord, word);
-    }
 
-    protected String convertHundredThousands(final String num) {
-        Integer i = Integer.parseInt(num.substring(0, 3));
-        String wholeWord = "";
-        if (i > 0) {
-            wholeWord = convertHundreds("" + i) + " thousand";
+        while (numberAsString.length() % 3 != 0) {
+            numberAsString = "0" + numberAsString;
         }
-        String hundos = num.substring(3);
-        String word = convertHundreds(hundos);
-        return conditionalConcat(wholeWord, word);
-    }
-
-    protected String convertMillions(final String num) {
-        Integer i = Integer.parseInt(num.substring(0,1));
-        String wholeWord = "";
-        if (i > 0) {
-            wholeWord = numbersAsWordsOnes.get(i) + " million";
+        int count = numberAsString.length() / 3;
+        for (int i = 0; i < count; i++) {
+            String place = numberNames[count-i-1];
+            String word = convertHundreds(numberAsString.substring(i*3, i*3+ 3));
+            if (word.length() > 0) {
+               wholeWord = wholeWord + " " +  word + " " + place;
+            }
         }
-        String hundos = num.substring(1);
-        String word = convertHundredThousands(hundos);
-        return conditionalConcat(wholeWord, word);
+        return wholeWord.trim();
     }
-
 
     //
     //
@@ -164,6 +149,11 @@ public class Converter {
         }
         if (value.startsWith("0")) {
             throw new IllegalArgumentException("Cannot start with a zero");
+        }
+        String[] leftRight = value.split(".");
+        // Is there more than 1 decimal?
+        if (leftRight.length > 2) {
+            throw new IllegalArgumentException("Decimal formatting incorrect");
         }
         int index = value.indexOf(".");
         if (index > 0) {
@@ -205,7 +195,11 @@ public class Converter {
             wholeWord = convertTens(leftOfDec);
         } else if (lengthLeftOfDec == 3) {
             wholeWord = convertHundreds(leftOfDec);
-        } else if (lengthLeftOfDec == 4) {
+        } else {
+            wholeWord = convertBigNumber(leftOfDec);
+        }
+/*
+        else if (lengthLeftOfDec == 4) {
             wholeWord = convertThousands(leftOfDec);
         } else if (lengthLeftOfDec == 5) {
             wholeWord = convertTenThousands(leftOfDec);
@@ -216,7 +210,7 @@ public class Converter {
         } else {
             throw new IllegalArgumentException("Unsupported number");
         }
-
+*/
         if (value.indexOf(".") >= 0) {
             wholeWord = wholeWord + " and " + convertDecimalPlace(value);
         }
