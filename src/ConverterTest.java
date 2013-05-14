@@ -1,12 +1,12 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class ConverterTest extends Converter{
+public class ConverterTest {
 
 
     @Test
     public void testGoodStuff() {
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
 
         assertEquals("One dollars", converter.convert("1"));
 
@@ -50,61 +50,61 @@ public class ConverterTest extends Converter{
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff0(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("0501");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff1(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert(null);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff2(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("89--0");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff3(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("890.");
     }
 
     @Test (expected = IllegalArgumentException.class)
-        public void testBadStuff4(){
-            Converter converter = new Converter();
-            converter.convert("890.0");
-        }
+    public void testBadStuff4(){
+        Converter converter = Converter.getInstance();
+        converter.convert("890.0");
+    }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff5(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("890.0000000000000001");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff6(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff7(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert(" 1 2 3 4 5");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff8(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("15% ");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testBadStuff9(){
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         converter.convert("10.00.0");
     }
 

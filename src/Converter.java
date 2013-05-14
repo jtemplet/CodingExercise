@@ -14,8 +14,17 @@ public class Converter {
 
     static String[] numberNames = { "", "thousand", "million", "billion", "trillion"};
 
-    public Converter() {
+    private static Converter instance;
+
+    private Converter() {
         init();
+    }
+
+    public static synchronized Converter getInstance() {
+        if (instance == null) {
+            instance = new Converter();
+        }
+        return instance;
     }
 
     protected void init() {
@@ -98,8 +107,8 @@ public class Converter {
      *
      *    9123456654 <-- this as input
      *
-     *    Breaks it up by 3's, from right to left
-     *    9 123 456 654
+     *    Breaks it up by 3's, and prepends 0s
+     *    009 123 456 654
      *
      *
      * @param numberAsString
@@ -198,19 +207,7 @@ public class Converter {
         } else {
             wholeWord = convertBigNumber(leftOfDec);
         }
-/*
-        else if (lengthLeftOfDec == 4) {
-            wholeWord = convertThousands(leftOfDec);
-        } else if (lengthLeftOfDec == 5) {
-            wholeWord = convertTenThousands(leftOfDec);
-        } else if (lengthLeftOfDec == 6) {
-            wholeWord = convertHundredThousands(leftOfDec);
-        } else if (lengthLeftOfDec == 7) {
-            wholeWord = convertMillions(leftOfDec);
-        } else {
-            throw new IllegalArgumentException("Unsupported number");
-        }
-*/
+
         if (value.indexOf(".") >= 0) {
             wholeWord = wholeWord + " and " + convertDecimalPlace(value);
         }
@@ -220,7 +217,7 @@ public class Converter {
 
     public static void main(String[] args) {
 
-        Converter converter = new Converter();
+        Converter converter = Converter.getInstance();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = null;
 
